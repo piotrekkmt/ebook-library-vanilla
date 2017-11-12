@@ -1,0 +1,31 @@
+{
+  "name": "ebook-library-vanilla",
+  "version": "0.0.1",
+  "description": "Ebook Library Nodejs version with vanilla front end",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.16.2",
+    "express-hbs": "^1.0.4",
+    "path": "^0.12.7",
+    "sqlite3": "^3.1.13"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/piotrekkmt/ebook-library-vanilla.git"
+  },
+  "keywords": [
+    "ebook",
+    "library",
+    "chasedbypenguins"
+  ],
+  "author": "Peter Poliwoda <contact@peterpoliwoda.me> (http://www.peterpoliwoda.me)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/piotrekkmt/ebook-library-vanilla/issues"
+  },
+  "homepage": "https://github.com/piotrekkmt/ebook-library-vanilla#readme"
+}

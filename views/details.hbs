@@ -1,0 +1,29 @@
+<div data-role="page" id="details">
+    {{>navbar}}
+    <div role="main" class="ui-content">
+    <h3 class="ui-bar ui-bar-a ui-corner-all">{{book.title}} by {{book.author}}</h3>
+    <div class="thumbnail-detail">
+        <img src="{{book.thumbnail}}" />
+        <a href="/download/{{book.filename}}" class="ui-btn ui-shadow">Download</a>
+    </div>
+    <div class="ui-body ui-body-a ui-corner-all">
+        <p>{{book.description}}</p>
+        <p>Language: <img src="../../images/blank.gif" class="flag flag-{{book.lang}}" alt="{{book.lang}}" title="{{book.lang}}" /><br />
+        Year: {{book.year}}<br />
+        Pages: {{book.pages}}<br />
+        ISBN is: {{book.isbn}}</p>
+        <p>
+        <a href="http://www.goodreads.com/book/isbn/{{book.isbn}}" title="Goodreads">
+            <img src="../../images/read_reviews_goodreads.png" border="0"></a>
+        <a href="https://books.google.com/books?isbn={{book.isbn}}" title="Google Books">
+        <img src="../../images/google_books.png" border="0"></a>
+        </p>
+    </div>
+    <h3 class="ui-bar ui-bar-a ui-corner-all">Goodreads reviews</h3>
+    <div class="ui-body ui-body-a ui-corner-all">
+        <div id="goodreads-widget">
+        <iframe id="the_iframe" src="http://www.goodreads.com/api/reviews_widget_iframe?did=5049&format=html&header_text=Goodreads+reviews+for+&isbn={{book.isbn}}&links=660&min_rating=&num_reviews=&review_back=ffffff&stars=000000&stylesheet=&text=444" width="95%" height="400" frameborder="0"></iframe>
+        </div>
+    </div>
+    </div>
+</div>

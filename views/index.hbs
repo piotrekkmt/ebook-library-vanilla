@@ -1,0 +1,23 @@
+<div data-role="page">
+    {{>navbar}}
+    <div role="main" class="ui-content">
+    <div class="ui-grid-b">
+      {{#each ebooks}}
+      <div class="ui-block-b">
+        <div class="ui-bar ui-bar-a" style=" height: 280px; background: url({{thumbnail}}); background-size: cover;">
+          <div class="list-filler">&nbsp;</div>
+          <div class="book-details">
+            <div class="list-title">{{title}}</div>
+            <div class="list-author">{{author}}</div>
+            <div class="list-rating">{{rating}}</div>
+            <div>
+              <img src="images/blank.gif" class="flag flag-{{lang}}" alt="{{lang}}" />
+              <a href="/details/{{isbn}}">View</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+    </div>
+</div>

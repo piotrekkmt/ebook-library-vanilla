@@ -1,0 +1,113 @@
+body {
+	font-family: 'Helvetica Neue', 'Roboto', Arial, sans-serif;
+	padding: 0px;
+	margin: 0px;
+}
+
+a {
+	text-decoration: none;
+	color: #382110;
+}
+
+.ebook-header {
+	background-color: #636280;
+}
+
+.buttons {
+	background-color: #E67C74;
+}
+
+/* List items */
+
+.thumbnail-list {
+	text-align: center;
+}
+
+.list-filler {
+	height: 150px;
+}
+
+.book-details {
+	background: rgba(255,255,255,0.7);
+	padding: 18px 15px;
+}
+
+.list-title {
+	height: 25px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.list-author {
+	height: 20px;
+	font-size: 13px;
+	padding-top: 5px;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.list-rating {
+	height: 25px;
+	padding: 3px;
+}
+
+/* Detail view */
+
+.thumbnail-detail {
+	text-align: center;
+	margin: 0 auto;
+	width: 220px;
+}
+
+div.rating {
+	float: right;
+	font-size: 14px;
+	text-align: center;
+	padding-top: 30px;
+	color:#333;
+	font-family: 'Spicy Rice', cursive;
+	background:url(star.png) no-repeat center;
+	height: 64px;
+	width: 60px;
+}
+
+/* Goodreads widget details page */
+.gr_review_text {
+	font-size: 34px;
+}
+
+#goodreads-widget {
+	width: 90%;
+	padding: 18px 0;
+	margin: 0 auto;
+}
+#goodreads-widget h1 {
+	font-weight:normal;
+	font-size: 16px;
+	border-bottom: 1px solid #BBB596;
+	margin-bottom: 0;
+}
+#goodreads-widget a {
+	text-decoration: none;
+	color:#660;
+}
+iframe{
+	background-color: #ffffff;
+}
+#goodreads-widget a:hover { text-decoration: underline; }
+#goodreads-widget a:active {
+	color:#660;
+}
+#gr_footer {
+	width: 100%;
+	border-top: 1px solid #BBB596;
+	text-align: right;
+}
+#goodreads-widget .gr_branding{
+	color: #382110;
+	font-size: 11px;
+	text-decoration: none;
+	font-family: verdana, arial, helvetica, sans-serif;
+}
