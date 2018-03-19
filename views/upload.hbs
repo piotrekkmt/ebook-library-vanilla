@@ -1,0 +1,43 @@
+<div data-role="page" id="details">
+    {{>navbar}}
+    <div role="main" class="ui-content">
+        <form>
+            <h3 class="ui-bar ui-bar-a ui-corner-all">Upload</h3>
+            <div class="thumbnail-detail">
+            <input type="file" id="ebookFileToUpload" name="ebookFileToUpload" />
+            </div>
+            <div class="ui-body ui-body-a ui-corner-all">
+                <div class="ui-field-contain">
+                    <input type="text" name="isbn" id="isbn" placeholder="ISBN" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="button" class="ui-btn ui-shadow" value="Get from Google" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="text" name="title" id="title" placeholder="Title" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="text" name="author" id="author" placeholder="Author" />
+                </div>
+                <div class="ui-field-contain">
+                    <textarea rows="4" name="description" id="description" placeholder="Description"></textarea>
+                </div>
+                <div class="ui-field-contain">
+                    <input type="number" name="pages" id="pages" placeholder="Pages" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="month" name="year" id="year" placeholder="Year" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="text" name="language" id="language" placeholder="Language" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="number" name="rating" id="rating" placeholder="Rating" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="submit" class="ui-btn ui-shadow" value="Upload book!" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

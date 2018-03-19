@@ -1,47 +1,44 @@
 'use strict';
-
-const sqlite3 = require('sqlite3').verbose();
-const dbPath = './ebooks.db';
-
+const request = require('request'),
+    sqlite3 = require('sqlite3').verbose(),
+    fileCtrl = require('./FileCtrl'),
+    dbPath = './ebooks.db';
 
 class EbookCtrl {
-    constructor() {
-
-    }
+    constructor() {}
     
-    //TODO: Connect to a local sqlite db
     getBooksFromDb() {
-        // open the database
-        let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
-            if (err) {
-            console.error(err.message);
-            }
-            console.log('Connected to the ebooks database.');
-        });
-        
-        db.serialize(() => {
-            db.each(`SELECT * FROM ebooks`, (err, row) => {
-            if (err) {
-                console.error(err.message);
-            }
-            console.log(row.id + "\t" + row.name);
+        return new Promise((resolve, reject) => {
+            let booksArray = [];
+            // open the database
+            let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                }
+    
+                db.serialize(() => {
+                    db.each(`SELECT * FROM ebooks`, (err, row) => {
+                        if (err) {
+                            console.error(err.message);
+                            reject(err);
+                        }
+                        booksArray.push(row);
+                    });
+                });
+            });
+            
+            db.close((err) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                }
+                console.log('Close the database connection.');
+                resolve(booksArray);
             });
         });
-        
-        db.close((err) => {
-            if (err) {
-            console.error(err.message);
-            }
-            console.log('Close the database connection.');
-        });
     }
 
-    //TODO: Get eBooks from local storage
-    getBooks() {
-        return require('./books.json');
-    }
-
-    //TODO: Get single eBook from local storage
     getBook(isbn) {
         let books = require('./books.json');
         for (let record in books) {
@@ -52,13 +49,114 @@ class EbookCtrl {
         return null;
     }
 
-    //TODO: Save eBook data to sqlite db
+    getBookFromDb(isbn) {
+        return new Promise((resolve, reject) => {
+            // open the database
+            let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                }
+                console.log('Connected to the ebooks database.');
+            });
+            
+            db.serialize(() => {
+                db.each(`SELECT * FROM ebooks WHERE ISBN = '` + isbn + `'`, (err, row) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                }
+                resolve(row);
+                });
+            });
+            
+            db.close((err) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                }
+                console.log('Close the database connection.');
+            });
+        });
+    }
 
-    //TODO: Get eBook details from Google Books API
-    
+    saveEbooktoDb(bookData) {
+        let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
+            if (err) {
+                console.error(err.message);
+            }
+            console.log('Connected to the ebooks database.');
+        });
+
+        db.serialize(() => {
+            let stmt = db.prepare('INSERT INTO ebooks (ISBN, TITLE, AUTHOR, DESCRIPTION, LANGUAGE, RATING, PAGES, YEAR, THUMBNAIL, FILENAME, READ)'
+            + ' VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+
+            stmt.run(bookData.isbn,
+                bookData.title,
+                bookData.author,
+                bookData.description,
+                bookData.lang,
+                bookData.rating == 'No rating' ? 0 : bookData.rating,
+                bookData.pages || 0,
+                bookData.year || 0,
+                bookData.thumbnail,
+                bookData.filename,
+                0);
+            stmt.finalize();
+        });
+
+        db.close((err) => {
+            if (err) {
+            console.error(err.message);
+            }
+            console.log('Close the database connection.');
+        });
+    }
+
+    getBookInfoFromGoogleBooks(isbnArr) {
+        let isbnString = '';
+        isbnArr.forEach(nr => {
+            isbnString += 'isbn:' + nr + '+OR+';
+        });
+        return new Promise((resolve, reject) => {
+            request.get('https://www.googleapis.com/books/v1/volumes?country=US&q=isbn:' + isbnString)
+                .on('response', response => {
+                    resolve(response);
+                }).on('error', err => {
+                    reject(err);
+                });
+        });
+    }    
+
+    getBooksFromFilesList() {
+        return new Promise((resolve, reject) => {
+            let filesList = fileCtrl.getFolderContent();
+            filesList = filesList.filter(f => {
+                if (f.name.includes('_')) {
+                    let isbn = f.name.split('_')[1] || false;
+                    console.log('typeof isbn', +isbn);
+                    return !isNaN(+isbn) ? isbn : false;
+                } else {
+                    return;
+                }
+            });
+            console.log('filesList', filesList);
+            this.getBookInfoFromGoogleBooks(filesList).then(resp => {
+                resolve(resp);
+            }).catch(err => {
+                reject(err);
+            });
+        });
+    }
+
+    //TODO: Get single eBook from local storage
+
     //TODO: Upload ebook file to server
 
     //TODO: Save ebook thumbnail to covers
+
+    //TODO: If db / table doesnt exist - create one
 
 }
 
