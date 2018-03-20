@@ -4,9 +4,6 @@ const express = require('express'),
     fileCtrl = require('../FileCtrl');;
 
 router.get(['/','/home'], (req, res) => {
-    ebookCtrl.getBooksFromFilesList().then(booksFromFiles => {
-
-    });
     ebookCtrl.getBooksFromDb().then(dbBooks => {
         res.render('index', {
           title: 'eBook Library - Home page',
