@@ -5,7 +5,7 @@ const fs = require('fs');
 
 class FileCtrl {
     constructor() {}
-    
+
     getFolderContent() {
         let folderContents = fs.readdirSync(ebooksFolderPath);
         folderContents = folderContents.map(file => {

@@ -23,32 +23,30 @@ class DBMapper {
     readAllQuery(query) {
         return new Promise((resolve, reject) => {
             let records = [];
+            // open the database
             let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
-                // open the database
-                let db = new sqlite3.Database(dbPath, sqlite3.OPEN_READWRITE, (err) => {
-                    if (err) {
-                        console.error(err.message);
-                        reject(err);
-                    }
-        
-                    db.serialize(() => {
-                        db.each(query, (err, row) => {
-                            if (err) {
-                                console.error(err.message);
-                                reject(err);
-                            }
-                            records.push(row);
-                        });
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                }
+
+                db.serialize(() => {
+                    db.each(query, (err, row) => {
+                        if (err) {
+                            console.error(err.message);
+                            reject(err);
+                        }
+                        records.push(row);
                     });
                 });
+            });
 
-                db.close((err) => {
-                    if (err) {
-                        console.error(err.message);
-                        reject(err);
-                    }
-                    resolve(records);
-                });
+            db.close((err) => {
+                if (err) {
+                    console.error(err.message);
+                    reject(err);
+                }
+                resolve(records);
             });
         });
     }
