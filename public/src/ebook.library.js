@@ -47,24 +47,21 @@ var ebookLibrary = (function() {
     };
 
     Ebook.prototype.sortBooksByKey = function(key) {
-        console.log('sorting books by', key);
         $('#allBooksGrid').html('');
         Ebook.allBooks.sort(function(a, b) {
             switch (key) {
             case 'AUTHOR':
                 var aa =  a[key].split(' ')[a[key].split(' ').length - 1];
                 var bb =  b[key].split(' ')[b[key].split(' ').length - 1];
-
                 return (aa > bb) ? 1 : ((aa < bb) ? -1 : 0);
-            case 'TITLE':
-                return (a[key] > b[key]) ? 1 : ((a[key] < b[key]) ? -1 : 0);
             case 'RATING':
                 a['RATING'] = (a['RATING'] === 'No rating') ? 0 : a['RATING'];
                 b['RATING'] = (b['RATING'] === 'No rating') ? 0 : b['RATING'];
                 return (a[key] < b[key]) ? 1 : ((a[key] > b[key]) ? -1 : 0);
+            default:
+                return (a[key] > b[key]) ? 1 : ((a[key] < b[key]) ? -1 : 0);
             }
         });
-
         Ebook.prototype.loadBooksIntoView(Ebook.allBooks);
     };
 
@@ -100,6 +97,3 @@ var ebookLibrary = (function() {
 }());
 
 ebookLibrary.init();
-
- // TODO: Sorting of eBook grid on front end by Vanilla JS / jQuery
-
