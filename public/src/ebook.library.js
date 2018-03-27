@@ -52,7 +52,10 @@ var ebookLibrary = (function() {
         Ebook.allBooks.sort(function(a, b) {
             switch (key) {
             case 'AUTHOR':
-                return (a[key] > b[key]) ? 1 : ((a[key] < b[key]) ? -1 : 0);
+                var aa =  a[key].split(' ')[a[key].split(' ').length - 1];
+                var bb =  b[key].split(' ')[b[key].split(' ').length - 1];
+
+                return (aa > bb) ? 1 : ((aa < bb) ? -1 : 0);
             case 'TITLE':
                 return (a[key] > b[key]) ? 1 : ((a[key] < b[key]) ? -1 : 0);
             case 'RATING':
