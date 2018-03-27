@@ -1,24 +1,7 @@
 <div data-role="page">
     {{>navbar}}
     <div role="main" class="ui-content">
-      <div class="ui-grid-b">
-        {{#each ebooks}}
-        <div class="ui-block-b">
-          <div class="ui-bar ui-bar-a" style=" height: 280px; background: url({{THUMBNAIL}}); background-size: cover;">
-            <div class="list-filler">&nbsp;</div>
-            <div class="book-details">
-              <div class="list-title"><a href="/details/{{ISBN}}">{{TITLE}}</a></div>
-              <div class="list-author">{{AUTHOR}}</div>
-              <div class="list-rating">{{rating}}</div>
-              <div>
-                <img src="images/blank.gif" class="flag flag-{{LANGUAGE}}" alt="{{LANGUAGE}}" />
-                <a href="/details/{{ISBN}}">View</a>
-              </div>
-            </div>
-          </div>
-        </div>
-        {{/each}}
-      </div>
+      <div class="ui-grid-b" id="allBooksGrid"></div>
     </div>
     <div align="center">
       <a href="/files">Show file list</a>

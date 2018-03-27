@@ -3,15 +3,15 @@ const request = require('request'),
     fileCtrl = require('./FileCtrl'),
     dbMapper = require('./DbMapper');
 
-const getAllBooksQuery = `SELECT * FROM ebooks`;
-const getBookByISBNQuery = `SELECT * FROM ebooks WHERE ISBN = '_ISBN_'`;
+const getAllBooksQuery = 'SELECT * FROM ebooks';
+const getBookByISBNQuery = 'SELECT * FROM ebooks WHERE ISBN = \'_ISBN_\'';
 const insertQuery = `INSERT INTO ebooks 
     (ISBN, TITLE, AUTHOR, DESCRIPTION, LANGUAGE, RATING, PAGES, YEAR, THUMBNAIL, FILENAME, READ) 
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
 class EbookCtrl {
     constructor() {}
-    
+
     getBooksFromDb() {
         return dbMapper.readAllQuery(getAllBooksQuery);
     }
@@ -49,26 +49,32 @@ class EbookCtrl {
         return null;
     }
 
-    getBookInfoFromGoogleBooks(isbnArr) {
+    getBookInfoFromGoogleBooks(isbnArrStr) {
         let isbnString = '';
-        isbnArr.forEach(nr => {
-            isbnString += 'isbn:' + nr + '+OR+';
-        });
+        if (Array.isArray(isbnArrStr)) {
+            isbnArrStr.forEach(nr => {
+                isbnString += 'isbn:' + nr + '+OR+';
+            });
+        } else if (typeof isbnArrStr === 'string') {
+            isbnString = isbnArrStr;
+        }
         return new Promise((resolve, reject) => {
-            request.get('https://www.googleapis.com/books/v1/volumes?country=US&q=isbn:' + isbnString)
-                .on('response', response => {
-                    resolve(response);
-                }).on('error', err => {
-                    reject(err);
+            request('https://www.googleapis.com/books/v1/volumes?country=PL&q=isbn:' + isbnString,
+                (error, response, body) => {
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve(body);
+                    }
                 });
         });
-    }    
+    }
 
     getBooksFromFilesList() {
         return new Promise((resolve, reject) => {
-            const filesList = fileCtrl.getFolderContent();
-            validFiles = filesList.filter(f => {
-                if (f.name.includes('_') && f.name.substr(0,1) !== ('.')) {
+            let filesList = fileCtrl.getFolderContent();
+            filesList = filesList.filter(f => {
+                if (f.name.includes('_') && f.name.substr(0, 1) !== ('.')) {
                     const isbn = f.name.split('_')[1] || false;
                     return !isNaN(+isbn) ? isbn : false;
                 } else {
@@ -76,16 +82,16 @@ class EbookCtrl {
                 }
             });
 
-            this.getBookInfoFromGoogleBooks(validFiles).then(resp => {
+            this.getBookInfoFromGoogleBooks(filesList).then(resp => {
                 resolve(resp);
             }).catch(err => {
                 reject(err);
             });
         });
     }
-    
+
     // TODO: Get ebook data from file name || ISBN number and save to db
-    
+
     // TODO: Upload ebook file to server
 
     // TODO: Save ebook thumbnail to covers
