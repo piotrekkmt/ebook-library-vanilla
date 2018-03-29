@@ -1,6 +1,6 @@
 {
   "name": "ebook-library-vanilla",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Ebook Library Nodejs version with vanilla front end",
   "main": "app.js",
   "dependencies": {
@@ -14,8 +14,8 @@
     "eslint": "^4.19.1"
   },
   "scripts": {
-    "start": "node app.js",
-    "lint": "eslint public/src/ebook.library.js server/"
+    "start": "npm install; node app.js",
+    "lint": "eslint app.js public/src/*.js server/"
   },
   "repository": {
     "type": "git",
