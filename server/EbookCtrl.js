@@ -1,7 +1,8 @@
 'use strict';
 const request = require('request'),
     fileCtrl = require('./FileCtrl'),
-    dbMapper = require('./DbMapper');
+    dbMapper = require('./DbMapper'),
+    ServerError = require('./errors/ServerError');
 
 const getAllBooksQuery = 'SELECT * FROM ebooks';
 const getBookByISBNQuery = 'SELECT * FROM ebooks WHERE ISBN = \'_ISBN_\'';
@@ -23,20 +24,26 @@ class EbookCtrl {
                 if (rows && rows.length) {
                     resolve(rows[0] || null);
                 } else {
-                    reject({status: 404, message: 'Not found'});
+                    reject(new ServerError('Not found', 404));
                 }
             }).catch(err => {
-                reject(err);
+                reject(new ServerError('Error reading from DB. ' + err.message, 500));
             });
         });
     }
 
     saveEbooktoDb(bookData) {
-        bookData.rating = (bookData.rating == 'No rating') ? 0 : bookData.rating,
-        bookData.pages = bookData.pages || 0;
-        bookData.year = bookData.year || 0;
+        return new Promise((resolve, reject) => {
+            bookData.rating = (bookData.rating == 'No rating') ? 0 : bookData.rating,
+            bookData.pages = bookData.pages || 0;
+            bookData.year = bookData.year || 0;
 
-        dbMapper.insertQuery(insertQuery, bookData);
+            dbMapper.insertQuery(insertQuery, bookData).then(() => {
+                resolve('Book successfully saved.');
+            }).catch(err => {
+                reject(new ServerError('Error inserting data to DB.' + err.message, 500));
+            });
+        });
     }
 
     getBook(isbn) {
@@ -60,9 +67,9 @@ class EbookCtrl {
         }
         return new Promise((resolve, reject) => {
             request('https://www.googleapis.com/books/v1/volumes?country=PL&q=isbn:' + isbnString,
-                (error, response, body) => {
-                    if (error) {
-                        reject(error);
+                (err, response, body) => {
+                    if (err) {
+                        reject(new ServerError('Google Books API error. ' + err, 400));
                     } else {
                         resolve(body);
                     }
