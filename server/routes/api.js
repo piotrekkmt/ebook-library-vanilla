@@ -6,7 +6,7 @@ router.get('/getBooks', (req, res) => {
     ebookCtrl.getBooksFromDb().then(dbBooks => {
         res.json(dbBooks);
     }).catch(err => {
-        res.json(err);
+        res.status(err.httpCode).json(err.toJSON());
     });
 });
 
@@ -16,10 +16,10 @@ router.get('/getBookDataByIsbn/:isbn', (req, res) => {
             res.setHeader('Content-Type', 'application/json');
             res.send(bookFromGoogle);
         }).catch(err => {
-            res.statusCode(500).json(err);
+            res.status(err.httpCode).json(err.toJSON());
         });
     } else {
-        res.statusCode(400).json({error: 400, message: 'Missing required parameter: ISBN No'});
+        res.status(400).json({error: 400, message: 'Missing required parameter: ISBN No'});
     }
 });
 
