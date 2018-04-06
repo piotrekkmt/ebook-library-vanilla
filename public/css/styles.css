@@ -73,6 +73,26 @@ div.rating {
 	width: 60px;
 }
 
+.thumbnail-placeholder {
+    margin: 0 auto;
+    background: #DDD;
+    border: 10px solid #EEE;
+    height: 100px;
+    width: 100px;
+    padding-top: 83px;
+    padding: 62px 16px 22px 16px;
+    color: #FFF;
+    font-family: Arial;
+}
+
+/* Upload view */
+
+.book-thumbnail {
+	position: relative;
+	top: -62px;
+	left: -14px;
+}
+
 /* Goodreads widget details page */
 .gr_review_text {
 	font-size: 34px;

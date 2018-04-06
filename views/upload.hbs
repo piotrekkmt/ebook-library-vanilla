@@ -1,17 +1,18 @@
 <div data-role="page" id="details">
     {{>navbar}}
     <div role="main" class="ui-content">
-        <form>
+        <form id="uploadEbookForm">
             <h3 class="ui-bar ui-bar-a ui-corner-all">Upload</h3>
             <div class="thumbnail-detail">
-            <input type="file" id="ebookFileToUpload" name="ebookFileToUpload" />
+                <div class="thumbnail-placeholder">UPLOAD BOOK</div>
+                <input type="file" id="ebookFileToUpload" name="ebookFileToUpload" />
             </div>
             <div class="ui-body ui-body-a ui-corner-all">
                 <div class="ui-field-contain">
-                    <input type="text" name="isbn" id="isbn" placeholder="ISBN" />
+                    <input type="text" name="uploadIsbn" id="uploadIsbn" placeholder="ISBN" />
                 </div>
                 <div class="ui-field-contain">
-                    <input type="button" class="ui-btn ui-shadow" value="Get from Google" />
+                    <input type="button" id="btnGetFromGoogle" class="ui-btn ui-shadow" value="Get from Google" />
                 </div>
                 <div class="ui-field-contain">
                     <input type="text" name="title" id="title" placeholder="Title" />
@@ -26,7 +27,7 @@
                     <input type="number" name="pages" id="pages" placeholder="Pages" />
                 </div>
                 <div class="ui-field-contain">
-                    <input type="month" name="year" id="year" placeholder="Year" />
+                    <input type="number" name="year" id="year" placeholder="Year" />
                 </div>
                 <div class="ui-field-contain">
                     <input type="text" name="language" id="language" placeholder="Language" />
