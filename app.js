@@ -1,7 +1,8 @@
 const express = require('express'),
     app = express(),
     path = require('path'),
-    hbs = require('express-hbs');
+    hbs = require('express-hbs'),
+    port = process.env.PORT || 3000;
 
 app.engine('hbs', hbs.express4({
     partialsDir: __dirname + '/views/partials',
@@ -15,6 +16,6 @@ app.use('/', require('./server/routes/ui.js'));
 app.use('/ebooks', express.static(path.join(__dirname, 'ebooks')));
 app.use('/', express.static(path.join(__dirname, 'public')));
 
-app.listen(3000, function() {
+app.listen(port, () => {
     console.log('eBook Library App listening on port 3000!');
 });
