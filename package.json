@@ -3,18 +3,21 @@
   "version": "0.0.3",
   "description": "Ebook Library Nodejs version with vanilla front end",
   "main": "app.js",
+  "engines": {
+    "node": "6.11.5"
+  },
   "dependencies": {
-    "express": "^4.16.2",
-    "express-hbs": "^1.0.4",
-    "path": "^0.12.7",
-    "request": "^2.83.0",
-    "sqlite3": "^3.1.13"
+    "express": "~4.16.2",
+    "express-hbs": "~1.0.4",
+    "path": "~0.12.7",
+    "request": "~2.83.0",
+    "sqlite3": "~3.1.13"
   },
   "devDependencies": {
-    "eslint": "^4.19.1"
+    "eslint": "4.19.1"
   },
   "scripts": {
-    "start": "npm install; node app.js",
+    "start": "node app.js",
     "lint": "eslint app.js public/src/*.js server/"
   },
   "repository": {
