@@ -7,8 +7,9 @@ const request = require('request'),
 const getAllBooksQuery = 'SELECT * FROM ebooks';
 const getBookByISBNQuery = 'SELECT * FROM ebooks WHERE ISBN = \'_ISBN_\'';
 const insertQuery = `INSERT INTO ebooks 
-    (ISBN, TITLE, AUTHOR, DESCRIPTION, LANGUAGE, RATING, PAGES, YEAR, THUMBNAIL, FILENAME, READ) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+    (ISBN, TITLE, AUTHOR, DESCRIPTION, LANGUAGE, RATING, PAGES, YEAR, THUMBNAIL, FILENAME, READ, MODIFIED) 
+    VALUES (__ISBN__, __TITLE__, __AUTHOR__, __DESCRIPTION__, __LANGUAGE__,
+         __RATING__, __PAGES__, __YEAR__, __THUMBNAIL__, __FILENAME__, __READ__, __MODIFIED__)`;
 
 class EbookCtrl {
     constructor() {}
@@ -32,16 +33,38 @@ class EbookCtrl {
         });
     }
 
+    prepareInsertBookQueryToSave(bookData) {
+        bookData.description = bookData.description.replace(/"/gi, '\\"');
+        bookData.description = bookData.description.replace(/'/gi, '\\\'');
+        bookData.description = bookData.description.replace(/\\/gi, '\\\\');
+
+        let query = insertQuery
+            .replace('__ISBN__', '"' + bookData.isbn + '"')
+            .replace('__TITLE__', '"' + bookData.title + '"')
+            .replace('__AUTHOR__', '"' + bookData.author + '"')
+            .replace('__DESCRIPTION__', '"' + bookData.description + '"')
+            .replace('__LANGUAGE__', '"' + bookData.lang + '"')
+            .replace('__RATING__', bookData.rating)
+            .replace('__PAGES__', bookData.pages)
+            .replace('__YEAR__', bookData.year)
+            .replace('__THUMBNAIL__', '"' + bookData.thumbnail + '"')
+            .replace('__FILENAME__', '"' + bookData.filename + '"')
+            .replace('__READ__', bookData.read)
+            .replace('__MODIFIED__', '"' + new Date().toISOString() + '"');
+        return query;
+    }
+
     saveEbooktoDb(bookData) {
         return new Promise((resolve, reject) => {
             bookData.rating = (bookData.rating == 'No rating') ? 0 : bookData.rating,
             bookData.pages = bookData.pages || 0;
-            bookData.year = bookData.year || 0;
+            bookData.read = bookData.read || 0;
 
-            dbMapper.insertQuery(insertQuery, bookData).then(() => {
+            const bookQuery = this.prepareInsertBookQueryToSave(bookData);
+            dbMapper.insertQuery(bookQuery).then(() => {
                 resolve('Book successfully saved.');
             }).catch(err => {
-                reject(new ServerError('Error inserting data to DB.' + err.message, 500));
+                reject(err);
             });
         });
     }
@@ -96,8 +119,6 @@ class EbookCtrl {
             });
         });
     }
-
-    // TODO: Get ebook data from file name || ISBN number and save to db
 
     // TODO: Upload ebook file to server
 
