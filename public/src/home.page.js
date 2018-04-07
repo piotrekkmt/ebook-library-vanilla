@@ -11,7 +11,7 @@
     var allBooks = [];
     var HomePage = {
         getAllBooks: function(callback) {
-            $.get('/api/getBooks/', function(books) {
+            $.get('/api/getbooks/', function(books) {
                 return callback(books);
             });
         },
@@ -36,6 +36,8 @@
             $('#allBooksGrid').html('');
             allBooks.sort(function(a, b) {
                 switch (key) {
+                case 'MODIFIED':
+                    return (a[key] < b[key]) ? 1 : ((a[key] > b[key]) ? -1 : 0);
                 case 'AUTHOR':
                     var aa =  a[key].split(' ')[a[key].split(' ').length - 1];
                     var bb =  b[key].split(' ')[b[key].split(' ').length - 1];
@@ -77,5 +79,4 @@
     };
 
     HomePage.init();
-
 })();

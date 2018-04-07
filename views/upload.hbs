@@ -1,7 +1,7 @@
 <div data-role="page" id="details">
     {{>navbar}}
-    <div role="main" class="ui-content">
-        <form id="uploadEbookForm">
+    <div role="main" class="ui-content upload-container">
+        <form id="uploadEbookForm" action="">
             <h3 class="ui-bar ui-bar-a ui-corner-all">Upload</h3>
             <div class="thumbnail-detail">
                 <div class="thumbnail-placeholder">UPLOAD BOOK</div>
@@ -36,7 +36,10 @@
                     <input type="number" name="rating" id="rating" placeholder="Rating" />
                 </div>
                 <div class="ui-field-contain">
-                    <input type="submit" class="ui-btn ui-shadow" value="Upload book!" />
+                    <input type="button" id="btnSaveBook" class="ui-btn ui-shadow" value="Upload book!" />
+                </div>
+                <div class="ui-field-contain">
+                    <div class="error-field"></div>
                 </div>
             </div>
         </form>

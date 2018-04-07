@@ -1,0 +1,9 @@
+# ignore data folders
+ebooks/*
+ebooks.db
+
+# github files
+.eslintrc.js
+.gitignore
+.travis.yml
+git_templates

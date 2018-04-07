@@ -1,5 +1,6 @@
 const express = require('express'),
     app = express(),
+    bodyParser = require('body-parser'),
     path = require('path'),
     hbs = require('express-hbs'),
     port = process.env.PORT || 3000;
@@ -10,6 +11,7 @@ app.engine('hbs', hbs.express4({
 }));
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
+app.use(bodyParser.json());
 
 app.use('/api', require('./server/routes/api.js'));
 app.use('/', require('./server/routes/ui.js'));
