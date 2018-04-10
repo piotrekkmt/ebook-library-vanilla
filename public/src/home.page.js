@@ -4,18 +4,18 @@
  * Author: Peter Poliwoda <contact@peterpoliwoda.me>
  * Date: 21/10/2017
 */
-
-(function() {
+var HomePage = (function() {
     'use strict';
 
     var allBooks = [];
-    var HomePage = {
+    return {
         getAllBooks: function(callback) {
             $.get('/api/getbooks/', function(books) {
                 return callback(books);
             });
         },
         getBookTemplate: function(book) {
+            book.THUMBNAIL = (book.THUMBNAIL) ? book.THUMBNAIL : 'images/covers/no-cover.png';
             return ` <div class="ui-block-b">
             <div class="ui-bar ui-bar-a" style=" height: 280px; background: url(` + book.THUMBNAIL
             + `); background-size: cover;">
@@ -68,6 +68,10 @@
             $('#sortByAuthor').bind('click', function() {
                 HomePage.sortBooksByKey('AUTHOR');
             });
+            $('#refreshHomePage').bind('click', function() {
+                $('#showHere').html('<strong>WIELKA DUPA</strong>');
+            });
+
         },
         init: function() {
             HomePage.getAllBooks(function(booksReceived) {
@@ -77,6 +81,4 @@
             HomePage.bindButtons();
         }
     };
-
-    HomePage.init();
 })();

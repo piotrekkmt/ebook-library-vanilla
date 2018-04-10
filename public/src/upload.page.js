@@ -5,10 +5,10 @@
  * Date: 28/03/2018
 */
 
-(function() {
+var UploadPage = (function() {
     'use strict';
 
-    var UploadPage = {
+    return {
         getBookDataFromGoogle: function(isbn, callback) {
             $.get('/api/getbookdatabyisbn/' + isbn, function(data) {
                 callback(data);
@@ -128,5 +128,4 @@
         }
     };
 
-    UploadPage.init();
 })();
