@@ -1,4 +1,4 @@
-<div data-role="page" id="details">
+<div data-role="page" id="DetailsPage">
     {{>navbar}}
     <div role="main" class="ui-content">
     <h3 class="ui-bar ui-bar-a ui-corner-all">{{book.TITLE}} by {{book.AUTHOR}}</h3>
@@ -13,7 +13,7 @@
             Pages: {{book.PAGES}}<br />
             ISBN: {{book.ISBN}}</p>
         <p>
-        <a href="http://www.goodreads.com/book/isbn/{{book.ISBN}}" title="Goodreads">
+        <a href="https://www.goodreads.com/book/isbn/{{book.ISBN}}" title="Goodreads">
             <img src="../../images/read_reviews_goodreads.png" border="0"></a>
         <a href="https://books.google.com/books?isbn={{book.ISBN}}" title="Google Books">
         <img src="../../images/google_books.png" border="0"></a>

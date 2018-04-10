@@ -1,0 +1,13 @@
+# ignore data folders
+ebooks/*
+ebooks.db
+
+# files
+.eslintrc.js
+.gitignore
+.travis.yml
+git_templates
+dbtest.js
+download-covers.js
+Procfile
+README.md
