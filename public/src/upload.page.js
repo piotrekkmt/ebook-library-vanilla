@@ -8,6 +8,8 @@
 var UploadPage = (function() {
     'use strict';
 
+    var ebookFilename = '';
+
     return {
         getBookDataFromGoogle: function(isbn, callback) {
             $.get('/api/getbookdatabyisbn/' + isbn, function(data) {
@@ -97,7 +99,7 @@ var UploadPage = (function() {
             bookObj.year = $('#year').val();
             bookObj.lang = $('#language').val() === 'en' ? 'gb' : $('#language').val();
             bookObj.rating = $('#rating').val();
-            bookObj.filename = $('#ebookfiletoupload').get(0).files[0].name;
+            bookObj.filename = ebookFilename;
             bookObj.thumbnail = $('img.book-thumbnail').attr('src') || '';
             return bookObj;
         },
@@ -108,6 +110,8 @@ var UploadPage = (function() {
                     alert('Saving ebook to db failed.');
                     console.error(err);
                 }
+                // Hide jQuery Mobile loader
+                $.mobile.loading('hide');
                 window.location.href = '/home';
             });
         },
@@ -115,7 +119,8 @@ var UploadPage = (function() {
             return new Promise(function(resolve, reject) {
                 var formData = new FormData();
                 var bookFileGet = $('#ebookfiletoupload').get(0);
-                formData.append('ebookfiletoupload', bookFileGet.files[0], bookFileGet.files[0].name);
+                ebookFilename = bookFileGet.files[0].name;
+                formData.append('ebookfiletoupload', bookFileGet.files[0], ebookFilename);
 
                 var xhr = new XMLHttpRequest();
                 xhr.open('POST', '/api/upload', true);
@@ -151,8 +156,19 @@ var UploadPage = (function() {
             $('#btnSaveBook').bind('click', function(event) {
                 event.preventDefault();
                 if (UploadPage.validateForm()) {
+                    // If valid form, show jQuery Mobile loader
+                    $.mobile.loading('show', {
+                        text: 'Uploading book',
+                        textVisible: true,
+                        theme: 'a',
+                        textonly: false
+                    });
+
                     UploadPage.saveEbookFile().then(function() {
                         UploadPage.saveEbookDataToDb();
+                    }).catch(function() {
+                        // Hide jQuery Mobile loader
+                        $.mobile.loading('hide');
                     });
                 } else {
                     // TODO: Show invalid form to user
