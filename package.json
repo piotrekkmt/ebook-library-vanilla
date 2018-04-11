@@ -11,6 +11,7 @@
     "dropbox": "~4.0.2",
     "express": "~4.16.2",
     "express-hbs": "~1.0.4",
+    "formidable": "~1.2.1",
     "isomorphic-fetch": "~2.2.1",
     "path": "~0.12.7",
     "request": "~2.83.0",
