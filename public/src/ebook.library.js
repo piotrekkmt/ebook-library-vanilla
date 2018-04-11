@@ -6,7 +6,6 @@
  */
 $(document).bind('pageshow', function(event, data) {
     var pageId = data.toPage.attr('id');
-    console.log('loaded page', pageId);
     switch (pageId) {
     case 'HomePage':
         /* eslint-disable no-undef */

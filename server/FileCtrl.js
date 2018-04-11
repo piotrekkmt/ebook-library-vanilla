@@ -1,9 +1,10 @@
 'use strict';
 
-const ebooksFolderPath = './ebooks/';
-const fs = require('fs');
 require('isomorphic-fetch');
-const DROPBOX_ACCESS_TOKEN = require('../config.json').DROPBOX_ACCESS_TOKEN,
+const ebooksFolderPath = './ebooks/',
+    DROPBOX_ACCESS_TOKEN = process.env.DROPBOX_ACCESS_TOKEN || require('../config.json').DROPBOX_ACCESS_TOKEN,
+    fs = require('fs'),
+    formidable = require('formidable'),
     Dropbox = require('dropbox').Dropbox,
     dbx = new Dropbox({accessToken: DROPBOX_ACCESS_TOKEN});
 
@@ -27,6 +28,28 @@ class FileCtrl {
                 resolve(data);
             }).catch(err => {
                 reject(err);
+            });
+        });
+    }
+
+    saveFileToDropbox(req) {
+        return new Promise((resolve, reject) => {
+            const form = new formidable.IncomingForm();
+            form.parse(req, function(err, fields, files) {
+                if (files && files.ebookfiletoupload) {
+                    const tempFilePath = files.ebookfiletoupload.path;
+                    let bookFile = fs.readFileSync(tempFilePath);
+                    dbx.filesUpload({path: '/ebooks/' + files.ebookfiletoupload.name, contents: bookFile})
+                        .then(function(response) {
+                            resolve('File successfully uploaded!');
+                            console.log('File uploaded to', response.path_display);
+                        }).catch(function(error) {
+                            reject(error);
+                            console.error(error);
+                        });
+                } else {
+                    reject('Nothing to upload');
+                }
             });
         });
     }
