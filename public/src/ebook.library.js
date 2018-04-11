@@ -1,5 +1,7 @@
 /*
  * eBook Library route controllers. Core app functionality.
+ * Author: Peter Poliwoda <contact@peterpoliwoda.me>
+ * Date: 28/03/2018
  * Ugly hack to solve the page reload issue
  */
 $(document).bind('pageshow', function(event, data) {
