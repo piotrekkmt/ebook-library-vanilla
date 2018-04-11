@@ -118,8 +118,7 @@ var UploadPage = (function() {
             $('#btnGetFromGoogle').bind('click', function() {
                 UploadPage.getFromGoogleBooks();
             });
-            $('#btnSaveBook').bind('click', function(event) {
-                event.preventDefault();
+            $('#btnSaveBook').bind('click', function() {
                 UploadPage.saveEbookDataToDb();
             });
         },

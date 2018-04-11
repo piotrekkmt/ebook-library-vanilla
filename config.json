@@ -1,3 +1,4 @@
 {
-    "dbFile": "./ebooks.db"
+    "dbFile": "./ebooks.db",
+    "DROPBOX_ACCESS_TOKEN": "YOUR-TOKEN-HERE"
 }

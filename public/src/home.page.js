@@ -16,21 +16,21 @@ var HomePage = (function() {
         },
         getBookTemplate: function(book) {
             book.THUMBNAIL = (book.THUMBNAIL) ? book.THUMBNAIL : 'images/covers/no-cover.png';
-            return ` <div class="ui-block-b">
-            <div class="ui-bar ui-bar-a" style=" height: 280px; background: url(` + book.THUMBNAIL
-            + `); background-size: cover;">
-              <div class="list-filler">&nbsp;</div>
-              <div class="book-details">
-                <div class="list-title"><a href="/details/` + book.ISBN + '">' + book.TITLE + `</a></div>
-                <div class="list-author">` + book.AUTHOR + `</div>
-                <div class="list-rating">` + (book.RATING ? book.RATING : 'No rating') + `</div>
-                <div>
-                  <img src="images/blank.gif" class="flag flag-` + book.LANGUAGE + '" alt="' + book.LANGUAGE + `" />
-                  <a href="/details/` + book.ISBN + `">View</a>
-                </div>
-              </div>
-            </div>
-          </div>`;
+            return '<div class="ui-block-b">' +
+            '<div class="ui-bar ui-bar-a" style=" height: 280px; background: url('
+                + book.THUMBNAIL + '); background-size: cover;">' +
+              '<div class="list-filler">&nbsp;</div>' +
+              '<div class="book-details">' +
+                '<div class="list-title"><a href="/details/' + book.ISBN + '">' + book.TITLE + '</a></div>' +
+                '<div class="list-author">' + book.AUTHOR + '</div>' +
+                '<div class="list-rating">' + (book.RATING ? book.RATING : 'No rating') + '</div>' +
+                '<div>' +
+                  '<img src="images/blank.gif" class="flag flag-' + book.LANGUAGE + '" alt="' + book.LANGUAGE + '" />' +
+                  '<a href="/details/' + book.ISBN + '">View</a>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>';
         },
         sortBooksByKey: function(key) {
             $('#allBooksGrid').html('');
