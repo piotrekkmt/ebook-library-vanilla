@@ -62,7 +62,6 @@ class DBMapper {
                 console.log('Connected to the ebooks database.');
             });
 
-            console.log(insertQuery, 'insertQuery');
             db.serialize(() => {
                 db.run(insertQuery, (err) => {
                     if (err) {
