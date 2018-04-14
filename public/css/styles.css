@@ -95,6 +95,8 @@ div.rating {
 	position: relative;
 	top: -62px;
 	left: -14px;
+	width: 130px;
+    height: 185px;
 }
 
 /* Goodreads widget details page */
