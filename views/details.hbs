@@ -6,10 +6,10 @@
         <img src="{{book.THUMBNAIL}}" />
         <a href="/api/file/{{book.FILENAME}}" target="_blank" class="ui-btn ui-shadow">Download</a>
     </div>
-    <div class="ui-body ui-body-a ui-corner-all">
+    <div class="ui-body ui-body-a ui-corner-all book-description">
         <p>{{book.DESCRIPTION}}</p>
-        <p>Rating: {{book.RATING}}<br />
-            Language: <img src="../../images/blank.gif" class="flag flag-{{book.LANGUAGE}}" alt="{{book.LANGUAGE}}" title="{{book.LANGUAGE}}" /><br />
+        <p>Rating: <span id="bookrating">{{book.RATING}}</span></p>
+        <p>Language: <img src="../../images/blank.gif" class="flag flag-{{book.LANGUAGE}}" alt="{{book.LANGUAGE}}" title="{{book.LANGUAGE}}" /><br />
             Year: {{book.YEAR}}<br />
             Pages: {{book.PAGES}}<br />
             ISBN: {{book.ISBN}}</p>
