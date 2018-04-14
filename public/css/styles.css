@@ -85,6 +85,10 @@ div.rating {
     font-family: Arial;
 }
 
+.book-description {
+	font-size: 1.2em;
+}
+
 /* Upload view */
 
 .book-thumbnail {

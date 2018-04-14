@@ -23,7 +23,9 @@ var HomePage = (function() {
               '<div class="book-details">' +
                 '<div class="list-title"><a href="/details/' + book.ISBN + '">' + book.TITLE + '</a></div>' +
                 '<div class="list-author">' + book.AUTHOR + '</div>' +
-                '<div class="list-rating">' + (book.RATING ? book.RATING : 'No rating') + '</div>' +
+                 /* eslint-disable no-undef */
+                 '<div class="list-rating">' + Rating.get(book.RATING) + '</div>' +
+                /* eslint-enable no-undef */
                 '<div>' +
                   '<img src="images/blank.gif" class="flag flag-' + book.LANGUAGE + '" alt="' + book.LANGUAGE + '" />' +
                   '<a href="/details/' + book.ISBN + '">View</a>' +

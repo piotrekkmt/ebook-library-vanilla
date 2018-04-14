@@ -17,6 +17,10 @@ $(document).bind('pageshow', function(event, data) {
         UploadPage.init();
         /* eslint-enable no-undef */
         break;
+    case 'DetailsPage':
+        /* eslint-disable no-undef */
+        DetailsPage.init();
+        /* eslint-enable no-undef */
+        break;
     }
-
 });
