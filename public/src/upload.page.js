@@ -42,7 +42,9 @@ var UploadPage = (function() {
                         ? bookToProcess.items[0].volumeInfo.averageRating : 0,
                     bYear = bookToProcess.items[0].volumeInfo.publishedDate
                         ? new Date(bookToProcess.items[0].volumeInfo.publishedDate).getFullYear() : '',
-                    thumbnail = bookToProcess.items[0].volumeInfo.imageLinks.smallThumbnail;
+                    thumbnail = (bookToProcess.items[0].volumeInfo.imageLinks &&
+                        bookToProcess.items[0].volumeInfo.imageLinks.smallThumbnail)
+                        ? bookToProcess.items[0].volumeInfo.imageLinks.smallThumbnail : '';
 
                 $('#title').val(bTitle);
                 $('#author').val(bAuthors);
@@ -52,7 +54,8 @@ var UploadPage = (function() {
                 $('#rating').val(bRating);
                 $('#year').val(bYear);
 
-                $('.thumbnail-placeholder').html('<img class="book-thumbnail" src="' + thumbnail + '" />');
+                $('#thumbnail').val(thumbnail);
+                $('#thumbnail').change();
 
                 // TODO: Get a book thumbnail colour.
 
@@ -100,7 +103,7 @@ var UploadPage = (function() {
             bookObj.lang = $('#language').val() === 'en' ? 'gb' : $('#language').val();
             bookObj.rating = $('#rating').val();
             bookObj.filename = ebookFilename;
-            bookObj.thumbnail = $('img.book-thumbnail').attr('src') || '';
+            bookObj.thumbnail = $('#thumbnail').val();
             return bookObj;
         },
         saveEbookDataToDb: function() {
@@ -173,6 +176,15 @@ var UploadPage = (function() {
                 } else {
                     // TODO: Show invalid form to user
                     console.error('Show invalid form error to user.');
+                }
+            });
+            $('#thumbnail').bind('change', function() {
+                var thumbUrl = $(this).val();
+                if (thumbUrl) {
+                    $('.thumbnail-placeholder').html('<img class="book-thumbnail" src="' + thumbUrl + '" />');
+                } else {
+                    $('.thumbnail-placeholder')
+                        .html('<img class="book-thumbnail" src="/images/covers/no-cover.png" />');
                 }
             });
         },
