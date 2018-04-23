@@ -107,47 +107,79 @@ var UploadPage = (function() {
             return bookObj;
         },
         saveEbookDataToDb: function() {
-            var bookObj = UploadPage.getBookObjFromForm();
-            UploadPage.saveToDb(bookObj, function(err) {
-                if (err) {
-                    alert('Saving ebook to db failed.');
-                    console.error(err);
-                }
-                // Hide jQuery Mobile loader
-                $.mobile.loading('hide');
-                window.location.href = '/home';
+            return new Promise(function(resolve, reject) {
+                var bookObj = UploadPage.getBookObjFromForm();
+                UploadPage.saveToDb(bookObj, function(err) {
+                    if (err) {
+                        console.error(err);
+                        reject('Saving data to db failed.');
+                    }
+                    // Hide jQuery Mobile loader
+                    $.mobile.loading('hide');
+                    window.location.href = '/home';
+                    resolve('Upload successful.');
+                });
             });
         },
         saveEbookFile: function() {
             return new Promise(function(resolve, reject) {
                 var formData = new FormData();
                 var bookFileGet = $('#ebookfiletoupload').get(0);
-                ebookFilename = bookFileGet.files[0].name;
-                formData.append('ebookfiletoupload', bookFileGet.files[0], ebookFilename);
+                if (bookFileGet && bookFileGet.files && bookFileGet.files[0] && bookFileGet.files[0].name) {
+                    ebookFilename = bookFileGet.files[0].name;
+                    formData.append('ebookfiletoupload', bookFileGet.files[0], ebookFilename);
 
-                var xhr = new XMLHttpRequest();
-                xhr.open('POST', '/api/upload', true);
-                // Set up a handler for when the request finishes.
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        // File(s) uploaded successfully.
-                        $('#ebookfiletoupload').remove();
-                        $('.thumbnail-detail').append('<p style="color: green;"> File uploaded successfully</p>');
-                        resolve('File uploaded.');
-                    } else {
-                        console.error('Upload error occured');
-                        console.error(xhr.status, xhr.statusText);
-                        alert('An error occurred!');
-                        reject(xhr.statusText);
-                    }
-                };
-                // Send the Data.
-                xhr.send(formData);
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/api/upload', true);
+                    // Set up a handler for when the request finishes.
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            // File(s) uploaded successfully.
+                            $('#ebookfiletoupload').remove();
+                            $('.thumbnail-detail').append('<p style="color: green;"> File uploaded successfully</p>');
+                            resolve('File uploaded.');
+                        } else {
+                            console.error('Upload error occured');
+                            console.error(xhr.status, xhr.statusText);
+                            reject(xhr.statusText);
+                        }
+                    };
+                    xhr.send(formData);
+                } else {
+                    reject('No file selected, or filename error.');
+                }
             });
         },
         validateForm: function() {
-            // TODO: Form validation
-            return true;
+            var bookObj = UploadPage.getBookObjFromForm();
+            if (!(bookObj.isbn) || bookObj.isbn.length < 8 || bookObj.isbn.length > 13) {
+                return 'ISBN error.';
+            }
+            if (!bookObj.title || bookObj.title.length < 2) {
+                return 'Book needs a title longer than 1 character.';
+            }
+            if (!bookObj.author || bookObj.author.length < 2) {
+                return 'Book needs an author longer than 2 characters.';
+            }
+            if (!bookObj.description || bookObj.description.length < 2) {
+                return 'Book needs a description!';
+            }
+            if (bookObj.pages < 0) {
+                return 'Pages can\'t be a negative number!';
+            }
+            if (bookObj.year < 0) {
+                return 'Year can\'t be a negative number!';
+            }
+            if (bookObj.rating < 0) {
+                return 'Rating can\'t be a negative number!';
+            }
+            if (!bookObj.lang || bookObj.lang.length !== 2) {
+                return 'Book needs a 2 character country code!';
+            }
+            if (bookObj.filename && bookObj.length < 5) {
+                return 'Filename length shorter than 5 chars.';
+            }
+            return false;
         },
         bindButtons: function() {
             $('#ebookfiletoupload').bind('change', function() {
@@ -158,7 +190,8 @@ var UploadPage = (function() {
             });
             $('#btnSaveBook').bind('click', function(event) {
                 event.preventDefault();
-                if (UploadPage.validateForm()) {
+                var validationErr = UploadPage.validateForm();
+                if (!validationErr) {
                     // If valid form, show jQuery Mobile loader
                     $.mobile.loading('show', {
                         text: 'Uploading book',
@@ -168,14 +201,15 @@ var UploadPage = (function() {
                     });
 
                     UploadPage.saveEbookFile().then(function() {
-                        UploadPage.saveEbookDataToDb();
-                    }).catch(function() {
-                        // Hide jQuery Mobile loader
-                        $.mobile.loading('hide');
+                        UploadPage.saveEbookDataToDb().catch(function(err) {
+                            UploadPage.showErrorToUser('Error while saving data to DB.', err);
+                        });
+                    }).catch(function(err) {
+                        UploadPage.showErrorToUser('File save error.', err);
                     });
                 } else {
-                    // TODO: Show invalid form to user
                     console.error('Show invalid form error to user.');
+                    UploadPage.showErrorToUser('Form validation error.', validationErr);
                 }
             });
             $('#thumbnail').bind('change', function() {
@@ -187,6 +221,12 @@ var UploadPage = (function() {
                         .html('<img class="book-thumbnail" src="/images/covers/no-cover.png" />');
                 }
             });
+        },
+        showErrorToUser: function(text, errorObj) {
+            // Hide jQuery Mobile loader
+            $.mobile.loading('hide');
+            $('.error-field').html(text + ' ' + errorObj);
+            $('.error-field').css('display', 'block');
         },
         init: function() {
             UploadPage.bindButtons();

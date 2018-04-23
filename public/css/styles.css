@@ -99,6 +99,11 @@ div.rating {
     height: 185px;
 }
 
+.error-field {
+	color: red;
+	display: none;
+}
+
 /* Goodreads widget details page */
 .gr_review_text {
 	font-size: 34px;
