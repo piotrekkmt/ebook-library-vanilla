@@ -19,7 +19,6 @@ var Rating = (function() {
                 stars.full = parseInt(bookRating, 10);
                 stars.half = (bookRating - stars.full === 0.5) ? 1 : 0;
                 stars.empty = Math.floor(5 - bookRating);
-                console.log('starsObj', stars);
                 return stars;
             } else {
                 return null;
