@@ -2,7 +2,10 @@
 ebooks/*
 ebooks.db
 
+node_modules/
+
 # files
+.env
 .eslintrc.js
 .gitignore
 .travis.yml

@@ -1,9 +1,17 @@
+require('dotenv').config();
+
 const express = require('express'),
     app = express(),
     bodyParser = require('body-parser'),
     path = require('path'),
     hbs = require('express-hbs'),
+    mongoose = require('mongoose'),
+    mongoUri = process.env.MONGO_URI,
     port = process.env.PORT || 3000;
+
+mongoose.connect(mongoUri, {useNewUrlParser: true})
+    .then(() => console.log('connection successful'))
+    .catch((err) => console.error(err));
 
 app.engine('hbs', hbs.express4({
     partialsDir: __dirname + '/views/partials',
