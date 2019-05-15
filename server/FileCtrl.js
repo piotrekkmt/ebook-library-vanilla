@@ -1,12 +1,13 @@
 'use strict';
 
-require('isomorphic-fetch');
-const ebooksFolderPath = './ebooks/',
+const fetch = require('isomorphic-fetch'),
+    ebooksFolderPath = './ebooks/',
     DROPBOX_ACCESS_TOKEN = process.env.DROPBOX_ACCESS_TOKEN || require('../config.json').DROPBOX_ACCESS_TOKEN,
     fs = require('fs'),
     formidable = require('formidable'),
     Dropbox = require('dropbox').Dropbox,
-    dbx = new Dropbox({accessToken: DROPBOX_ACCESS_TOKEN});
+    dbx = new Dropbox({accessToken: DROPBOX_ACCESS_TOKEN, fetch: fetch});
+
 
 class FileCtrl {
     constructor() {}
