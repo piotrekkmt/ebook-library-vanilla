@@ -13,7 +13,7 @@ class EbookCtrl {
 
     async getBookFromDb(isbn) {
         try {
-            const bookData = await EbookModel.findOne({ISBN: isbn}).exec();
+            const bookData = await EbookModel.findOne({isbn: isbn}).exec();
             if (bookData) {
                 // THE object headings need to be in the same case.. upper or lower, make everything lower
                 return bookData;
@@ -31,21 +31,20 @@ class EbookCtrl {
         let modelledEbooks = [];
         dropboxContents.forEach(dbxFile => {
             const bookData = {
-                'FILENAME': dbxFile.name
+                'filename': dbxFile.name
             };
 
             const regexTitleWithLangAndIsbn = /^.._[a-zA-Z0-9]{1,13}_/;
 
             if (dbxFile.name && dbxFile.name.match(regexTitleWithLangAndIsbn)) {
-                bookData['LANGUAGE'] = dbxFile.name.substr(0, 2).toLowerCase();
-                bookData['ISBN'] = dbxFile.name.split('_')[1];
-                bookData['TITLE'] = dbxFile.name.split('_')[2];
-                bookData['AUTHOR'] = '';
+                bookData['language'] = dbxFile.name.substr(0, 2).toLowerCase();
+                bookData['isbn'] = dbxFile.name.split('_')[1];
+                bookData['title'] = dbxFile.name.split('_')[2];
+                bookData['author'] = '**file**';
             } else {
-                bookData['TITLE'] = dbxFile.name;
-                bookData['AUTHOR'] = '';
+                bookData['title'] = dbxFile.name;
+                bookData['author'] = '**file**';
             }
-
             const fileEntry = new EbookModel(bookData);
             modelledEbooks.push(fileEntry);
         });
@@ -62,11 +61,34 @@ class EbookCtrl {
         return unique;
     }
 
+    removeFilesAlreadyInDb(data) {
+        const filenames = data.map(book => {
+            return book.filename;
+        });
+
+        let duplicatedFilenames = [];
+        filenames.forEach(str => {
+            if (filenames.indexOf(str) !== filenames.lastIndexOf(str)) {
+                duplicatedFilenames.push(str);
+            }
+        });
+
+        const dups = [... new Set(duplicatedFilenames)];
+
+        return data.filter(ebook => {
+            if (dups.includes(ebook.filename) && ebook.author === '**file**') {
+                return false;
+            } else {
+                return true;
+            }
+        });
+    }
+
     mergeDropboxWithDatabase(dbx, db) {
         dbx = dbx || [];
         db = db || [];
         let merged = dbx.concat(db);
-        return this.getUnique(merged, 'FILENAME');
+        return this.removeFilesAlreadyInDb(merged);
     }
 
     async getAllBooks() {
@@ -83,16 +105,17 @@ class EbookCtrl {
     }
 
     async saveEbooktoDb(bookData) {
-        bookData.rating = (bookData.rating === 'No rating') ? 0 : bookData.rating,
-        bookData.pages = bookData.pages || 0;
-        bookData.read = bookData.read || 0;
-
         try {
+            bookData.rating = (bookData.rating === 'No rating') ? 0 : bookData.rating,
+            bookData.pages = bookData.pages || 0;
+            bookData.read = bookData.read || 0;
+
             const ebookEntry = new EbookModel(bookData);
-            const bookSaved = await ebookEntry.save().exec();
+            const bookSaved = await ebookEntry.save();
             console.log('Book saved', bookSaved);
             return 'Book successfully saved.';
         } catch (err) {
+            console.error('Error saving book to db', err);
             throw new ServerError('Error saving book to db', 500);
         }
     }
@@ -109,7 +132,6 @@ class EbookCtrl {
 
         return new Promise((resolve, reject) => {
             request('https://www.googleapis.com/books/v1/volumes?country=PL&q=isbn:' + isbnString).then(body => {
-                console.log('got response from google', body);
                 resolve(body);
             }, err => {
                 reject(new ServerError('Google Books API error. ' + err, 400));

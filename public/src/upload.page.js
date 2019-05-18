@@ -24,7 +24,8 @@ var UploadPage = (function() {
                 contentType: 'application/json',
                 dataType: 'json',
                 success: function(data) { callback(null, data); },
-                failure: function(errMsg) {
+                error: function(xhr, errMsg) {
+                    console.error('Error saving book data to db.', errMsg);
                     callback(errMsg);
                 }
             });
@@ -100,7 +101,7 @@ var UploadPage = (function() {
             bookObj.description = $('#description').val();
             bookObj.pages = $('#pages').val();
             bookObj.year = $('#year').val();
-            bookObj.lang = $('#language').val() === 'en' ? 'gb' : $('#language').val();
+            bookObj.language = $('#language').val() === 'en' ? 'gb' : $('#language').val();
             bookObj.rating = $('#rating').val();
             bookObj.filename = ebookFilename;
             bookObj.thumbnail = $('#thumbnail').val();
@@ -113,11 +114,12 @@ var UploadPage = (function() {
                     if (err) {
                         console.error(err);
                         reject('Saving data to db failed.');
+                    } else {
+                        // Hide jQuery Mobile loader
+                        $.mobile.loading('hide');
+                        window.location.href = '/home';
+                        resolve('Upload successful.');
                     }
-                    // Hide jQuery Mobile loader
-                    $.mobile.loading('hide');
-                    window.location.href = '/home';
-                    resolve('Upload successful.');
                 });
             });
         },
@@ -173,7 +175,7 @@ var UploadPage = (function() {
             if (bookObj.rating < 0) {
                 return 'Rating can\'t be a negative number!';
             }
-            if (!bookObj.lang || bookObj.lang.length !== 2) {
+            if (!bookObj.language || bookObj.lang.length !== 2) {
                 return 'Book needs a 2 character country code!';
             }
             if (bookObj.filename && bookObj.length < 5) {
