@@ -33,19 +33,19 @@ var UploadPage = (function() {
         processReceivedBookData: function(bookToProcess) {
             if (bookToProcess && bookToProcess.items && bookToProcess.items.length
                 && bookToProcess.items[0].volumeInfo) {
-
-                var bTitle = bookToProcess.items[0].volumeInfo.title,
-                    bAuthors = bookToProcess.items[0].volumeInfo.authors[0],
-                    bDesc = bookToProcess.items[0].volumeInfo.description,
-                    bPages = bookToProcess.items[0].volumeInfo.pageCount,
-                    bLanguage = bookToProcess.items[0].volumeInfo.language,
-                    bRating = bookToProcess.items[0].volumeInfo.averageRating
-                        ? bookToProcess.items[0].volumeInfo.averageRating : 0,
-                    bYear = bookToProcess.items[0].volumeInfo.publishedDate
-                        ? new Date(bookToProcess.items[0].volumeInfo.publishedDate).getFullYear() : '',
-                    thumbnail = (bookToProcess.items[0].volumeInfo.imageLinks &&
-                        bookToProcess.items[0].volumeInfo.imageLinks.smallThumbnail)
-                        ? bookToProcess.items[0].volumeInfo.imageLinks.smallThumbnail : '';
+                var volumeInfo = bookToProcess.items[0].volumeInfo;
+                var bTitle = volumeInfo.title,
+                    bAuthors = (volumeInfo.authors && volumeInfo.authors.length) ? volumeInfo.authors[0] : '',
+                    bDesc = volumeInfo.description,
+                    bPages = volumeInfo.pageCount,
+                    bLanguage = volumeInfo.language,
+                    bRating = volumeInfo.averageRating
+                        ? volumeInfo.averageRating : 0,
+                    bYear = volumeInfo.publishedDate
+                        ? new Date(volumeInfo.publishedDate).getFullYear() : '',
+                    thumbnail = (volumeInfo.imageLinks &&
+                        volumeInfo.imageLinks.smallThumbnail)
+                        ? volumeInfo.imageLinks.smallThumbnail : '';
 
                 $('#title').val(bTitle);
                 $('#author').val(bAuthors);
