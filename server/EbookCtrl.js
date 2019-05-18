@@ -27,6 +27,61 @@ class EbookCtrl {
         }
     }
 
+    makeDropboxFilesIntoMongooseModels(dropboxContents) {
+        let modelledEbooks = [];
+        dropboxContents.forEach(dbxFile => {
+            const bookData = {
+                'FILENAME': dbxFile.name
+            };
+
+            const regexTitleWithLangAndIsbn = /^.._[a-zA-Z0-9]{1,13}_/;
+
+            if (dbxFile.name && dbxFile.name.match(regexTitleWithLangAndIsbn)) {
+                bookData['LANGUAGE'] = dbxFile.name.substr(0, 2).toLowerCase();
+                bookData['ISBN'] = dbxFile.name.split('_')[1];
+                bookData['TITLE'] = dbxFile.name.split('_')[2];
+                bookData['AUTHOR'] = '';
+            } else {
+                bookData['TITLE'] = dbxFile.name;
+                bookData['AUTHOR'] = '';
+            }
+
+            const fileEntry = new EbookModel(bookData);
+            modelledEbooks.push(fileEntry);
+        });
+
+        return modelledEbooks;
+    }
+
+    getUnique(arr, comp) {
+        const unique = arr.map(e => e[comp])
+            // store the keys of the unique objects
+            .map((e, i, final) => final.indexOf(e) === i && i)
+            // eliminate the dead keys & store unique objects
+            .filter(e => arr[e]).map(e => arr[e]);
+        return unique;
+    }
+
+    mergeDropboxWithDatabase(dbx, db) {
+        dbx = dbx || [];
+        db = db || [];
+        let merged = dbx.concat(db);
+        return this.getUnique(merged, 'FILENAME');
+    }
+
+    async getAllBooks() {
+        try {
+            let [dropboxBooks, databaseBooks] = await Promise.all([fileCtrl.getDropboxContents(),
+                this.getBooksFromDb()]);
+            const dbxModelled = this.makeDropboxFilesIntoMongooseModels(dropboxBooks);
+            let fullBookList = this.mergeDropboxWithDatabase(dbxModelled, databaseBooks);
+            return fullBookList;
+        } catch (err) {
+            console.error(err);
+            throw new ServerError('Error getting books', 500);
+        }
+    }
+
     async saveEbooktoDb(bookData) {
         bookData.rating = (bookData.rating === 'No rating') ? 0 : bookData.rating,
         bookData.pages = bookData.pages || 0;
