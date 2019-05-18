@@ -15,20 +15,21 @@ var HomePage = (function() {
             });
         },
         getBookTemplate: function(book) {
-            book.THUMBNAIL = (book.THUMBNAIL) ? book.THUMBNAIL : 'images/covers/no-cover.png';
+            book.thumbnail = (book.thumbnail) ? book.thumbnail : 'images/covers/no-cover.png';
             return '<div class="ui-block-b">' +
             '<div class="ui-bar ui-bar-a" style=" height: 280px; background: url('
-                + book.THUMBNAIL + '); background-size: cover;">' +
+                + book.thumbnail + '); background-size: cover;">' +
               '<div class="list-filler">&nbsp;</div>' +
               '<div class="book-details">' +
-                '<div class="list-title"><a href="/details/' + book.ISBN + '">' + book.TITLE + '</a></div>' +
-                '<div class="list-author">' + book.AUTHOR + '</div>' +
+                '<div class="list-title"><a href="/details/' + book.isbn + '">' + book.title + '</a></div>' +
+                '<div class="list-author">' + book.author + '</div>' +
                  /* eslint-disable no-undef */
-                 '<div class="list-rating">' + Rating.get(book.RATING) + '</div>' +
+                 '<div class="list-rating">' + Rating.get(book.rating) + '</div>' +
                 /* eslint-enable no-undef */
                 '<div>' +
-                  '<img src="images/blank.gif" class="flag flag-' + book.LANGUAGE + '" alt="' + book.LANGUAGE + '" />' +
-                  '<a href="/details/' + book.ISBN + '">View</a>' +
+                  '<img src="images/blank.gif" class="flag flag-' + (book.language ? book.language : 'pl')
+                      + '" alt="' + book.language + '" />' +
+                  '<a href="/details/' + book.isbn + '">View</a>' +
                 '</div>' +
               '</div>' +
             '</div>' +
@@ -38,15 +39,15 @@ var HomePage = (function() {
             $('#allBooksGrid').html('');
             allBooks.sort(function(a, b) {
                 switch (key) {
-                case 'MODIFIED':
+                case 'modified':
                     return (a[key] < b[key]) ? 1 : ((a[key] > b[key]) ? -1 : 0);
-                case 'AUTHOR':
+                case 'author':
                     var aa =  a[key].split(' ')[a[key].split(' ').length - 1];
                     var bb =  b[key].split(' ')[b[key].split(' ').length - 1];
                     return (aa > bb) ? 1 : ((aa < bb) ? -1 : 0);
-                case 'RATING':
-                    a['RATING'] = (a['RATING'] === 'No rating') ? 0 : a['RATING'];
-                    b['RATING'] = (b['RATING'] === 'No rating') ? 0 : b['RATING'];
+                case 'rating':
+                    a['rating'] = (a['rating'] === 'No rating') ? 0 : a['rating'];
+                    b['rating'] = (b['rating'] === 'No rating') ? 0 : b['rating'];
                     return (a[key] < b[key]) ? 1 : ((a[key] > b[key]) ? -1 : 0);
                 default:
                     return (a[key] > b[key]) ? 1 : ((a[key] < b[key]) ? -1 : 0);
@@ -62,13 +63,13 @@ var HomePage = (function() {
         },
         bindButtons: function() {
             $('#sortByTitle').bind('click', function() {
-                HomePage.sortBooksByKey('TITLE');
+                HomePage.sortBooksByKey('title');
             });
             $('#sortByRating').bind('click', function() {
-                HomePage.sortBooksByKey('RATING');
+                HomePage.sortBooksByKey('rating');
             });
             $('#sortByAuthor').bind('click', function() {
-                HomePage.sortBooksByKey('AUTHOR');
+                HomePage.sortBooksByKey('author');
             });
             $('#refreshHomePage').bind('click', function() {
                 $('#showHere').html('<strong>WIELKA DUPA</strong>');

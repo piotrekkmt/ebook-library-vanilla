@@ -25,13 +25,14 @@ router.get('/getbookdatabyisbn/:isbn', (req, res) => {
     }
 });
 
-router.post('/saveebook', (req, res) => {
+router.post('/saveebook', async(req, res) => {
     if (req.body) {
-        ebookCtrl.saveEbooktoDb(req.body).then(message => {
+        try {
+            const message = await ebookCtrl.saveEbooktoDb(req.body);
             res.status(200).json({status: 'OK', message: message});
-        }).catch(err => {
+        } catch (err) {
             res.status(err.httpCode).json(err);
-        });
+        }
     } else {
         res.status(400).json('Missing parameters');
     }

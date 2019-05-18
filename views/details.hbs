@@ -1,22 +1,22 @@
 <div data-role="page" id="DetailsPage">
     {{>navbar}}
     <div role="main" class="ui-content">
-    <h3 class="ui-bar ui-bar-a ui-corner-all">{{book.TITLE}} by {{book.AUTHOR}}</h3>
+    <h3 class="ui-bar ui-bar-a ui-corner-all">{{book.title}} by {{book.author}}</h3>
     <div class="thumbnail-detail">
-        <img src="{{book.THUMBNAIL}}" />
-        <a href="/api/file/{{book.FILENAME}}" target="_blank" class="ui-btn ui-shadow">Download</a>
+        <img src="{{book.thumbnail}}" />
+        <a href="/api/file/{{book.filename}}" target="_blank" class="ui-btn ui-shadow">Download</a>
     </div>
     <div class="ui-body ui-body-a ui-corner-all book-description">
-        <p>{{book.DESCRIPTION}}</p>
-        <p>Rating: <span id="bookrating">{{book.RATING}}</span></p>
-        <p>Language: <img src="../../images/blank.gif" class="flag flag-{{book.LANGUAGE}}" alt="{{book.LANGUAGE}}" title="{{book.LANGUAGE}}" /><br />
-            Year: {{book.YEAR}}<br />
-            Pages: {{book.PAGES}}<br />
-            ISBN: {{book.ISBN}}</p>
+        <p>{{book.description}}</p>
+        <p>Rating: <span id="bookrating">{{book.rating}}</span></p>
+        <p>Language: <img src="../../images/blank.gif" class="flag flag-{{book.language}}" alt="{{book.language}}" title="{{book.language}}" /><br />
+            Year: {{book.year}}<br />
+            Pages: {{book.pages}}<br />
+            ISBN: {{book.isbn}}</p>
         <p>
-        <a href="https://www.goodreads.com/book/isbn/{{book.ISBN}}" title="Goodreads">
+        <a href="https://www.goodreads.com/book/isbn/{{book.isbn}}" title="Goodreads">
             <img src="../../images/read_reviews_goodreads.png" border="0"></a>
-        <a href="https://books.google.com/books?isbn={{book.ISBN}}" title="Google Books">
+        <a href="https://books.google.com/books?isbn={{book.isbn}}" title="Google Books">
         <img src="../../images/google_books.png" border="0"></a>
         </p>
     </div>
