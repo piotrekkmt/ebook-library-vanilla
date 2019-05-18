@@ -3,12 +3,13 @@ const express = require('express'),
     ebookCtrl = require('../EbookCtrl'),
     fileCtrl = require('../FileCtrl');
 
-router.get('/getbooks', (req, res) => {
-    ebookCtrl.getBooksFromDb().then(dbBooks => {
+router.get('/getbooks', async(req, res) => {
+    try {
+        const dbBooks = await ebookCtrl.getAllBooks();
         res.json(dbBooks);
-    }).catch(err => {
+    } catch (err) {
         res.status(err.httpCode).json(err.toJSON());
-    });
+    }
 });
 
 router.get('/getbookdatabyisbn/:isbn', (req, res) => {
@@ -49,12 +50,28 @@ router.get('/file/:filename', (req, res) => {
     }
 });
 
-router.post('/upload/', (req, res) => {
-    fileCtrl.saveFileToDropbox(req).then(result => {
+router.get('/thumbnail/:thumbFilename', async(req, res) => {
+    if (req.params.thumbFilename) {
+        try {
+            const thumbnail = await fileCtrl.getThumbnailFileFromDropbox(req.params.thumbFilename);
+            res.writeHead(200, {'Content-Type': 'image/jpeg'});
+            res.end(thumbnail.fileBinary, 'binary');
+        } catch (err) {
+            console.error('Thumbnail error', err);
+            res.status(404).json({error: 404, message: 'Image not found'});
+        }
+    } else {
+        res.status(400).json('Missing ISBN parameter');
+    }
+});
+
+router.post('/upload/', async(req, res) => {
+    try {
+        const result = await fileCtrl.saveFileToDropbox(req);
         res.status(200).json({status: 'OK', message: result});
-    }).catch(err => {
+    } catch (err) {
         res.status(500).json(err);
-    });
+    }
 });
 
 module.exports = router;
