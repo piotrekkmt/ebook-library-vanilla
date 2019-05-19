@@ -9,6 +9,7 @@ var UploadPage = (function() {
     'use strict';
 
     var ebookFilename = '';
+    var fileTooBig = false;
 
     return {
         getBookDataFromGoogle: function(isbn, callback) {
@@ -83,6 +84,38 @@ var UploadPage = (function() {
                 });
             } else {
                 $('div.thumbnail-placeholder').html('Invalid filename. Insert ISBN manually.');
+            }
+        },
+        getFileSize() {
+            var sizeInKb = parseInt(this.getFileSizeFromFile() / 1024);
+            if (sizeInKb > 1024 * 10) {
+                $('#fileSize').html('The filesize is over 10MB! (' + sizeInKb + ' kB)');
+                $('#fileSize').addClass('red');
+                fileTooBig = true;
+            } else {
+                $('#fileSize').html('(' + sizeInKb + ' kB)').removeClass('red');
+                fileTooBig = false;
+            }
+        },
+        getFileSizeFromFile() {
+            var input, file;
+
+            if (!window.FileReader) {
+                console.error('The file API isn\'t supported on this browser yet.');
+                return 0;
+            }
+
+            input = document.getElementById('ebookfiletoupload');
+            if (!input) {
+                console.error('Um, couldn\'t find the fileinput element.');
+                return 0;
+            } else if (!input.files) {
+                console.error('This browser doesn\'t seem to support the `files` property of file inputs.');
+                return 0;
+            } else {
+                file = input.files[0];
+                console.log('File ' + file.name + ' is ' + file.size + ' bytes in size');
+                return file.size;
             }
         },
         getFromGoogleBooks: function() {
@@ -175,17 +208,21 @@ var UploadPage = (function() {
             if (bookObj.rating < 0) {
                 return 'Rating can\'t be a negative number!';
             }
-            if (!bookObj.language || bookObj.lang.length !== 2) {
+            if (!bookObj.language || bookObj.language.length !== 2) {
                 return 'Book needs a 2 character country code!';
             }
-            if (bookObj.filename && bookObj.length < 5) {
+            if (bookObj.filename && bookObj.filename.length < 5) {
                 return 'Filename length shorter than 5 chars.';
+            }
+            if (fileTooBig) {
+                return 'File is too big!';
             }
             return false;
         },
         bindButtons: function() {
             $('#ebookfiletoupload').bind('change', function() {
                 UploadPage.getIsbnNoFromFileName();
+                UploadPage.getFileSize();
             });
             $('#btnGetFromGoogle').bind('click', function() {
                 UploadPage.getFromGoogleBooks();
