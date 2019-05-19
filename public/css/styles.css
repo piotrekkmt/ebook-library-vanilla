@@ -61,6 +61,11 @@ a {
 	width: 220px;
 }
 
+.book-thumb-detail {
+	width: 130px;
+    height: 185px;
+}
+
 div.rating {
 	float: right;
 	font-size: 14px;

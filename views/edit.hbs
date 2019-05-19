@@ -1,0 +1,52 @@
+<div data-role="page" id="EditPage">
+    {{>navbar}}
+    <div role="main" class="ui-content upload-container">
+        <form id="uploadEbookForm" action="">
+            <form action="/api/editebook" method="put" enctype="multipart/form-data">
+            <h3 class="ui-bar ui-bar-a ui-corner-all">Edit book</h3>
+            <div class="thumbnail-detail">
+                <div class="thumbnail-placeholder"></div>
+            </div>
+        </div>
+            <div class="ui-body ui-body-a ui-corner-all">
+                <div class="ui-field-contain">
+                    <input type="text" name="uploadIsbn" id="uploadIsbn" placeholder="ISBN" value="{{book.isbn}}" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="button" id="btnGetFromGoogle" class="ui-btn ui-shadow" value="Get from Google" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="text" name="title" id="title" placeholder="Title" value="{{book.title}}" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="text" name="author" id="author" placeholder="Author" value="{{book.author}}" />
+                </div>
+                <div class="ui-field-contain">
+                    <textarea rows="4" name="description" id="description" placeholder="Description">{{book.description}}</textarea>
+                </div>
+                <div class="ui-field-contain">
+                    <input type="number" name="pages" id="pages" placeholder="Pages" value="{{book.pages}}" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="number" name="year" id="year" placeholder="Year" value="{{book.year}}" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="text" name="language" id="language" placeholder="Language" value="{{book.language}}" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="number" name="rating" id="rating" placeholder="Rating" value="{{book.rating}}" />
+                </div>
+                <div class="ui-field-contain">
+                    <input type="text" name="thumbnail" id="thumbnail" placeholder="Thumbnail" value="{{book.thumbnail}}" />
+                </div>
+                <div class="ui-field-contain">
+                    <div class="error-field">This is an upload error.</div>
+                </div>
+                <div class="ui-field-contain">
+                    <input type="hidden" name="bookId" id="bookId" value="{{book._id}}" />
+                    <input type="button" id="btnSaveBook" class="ui-btn ui-shadow" value="Edit book!" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

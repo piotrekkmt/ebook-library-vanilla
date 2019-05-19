@@ -46,7 +46,6 @@ class EbookCtrl {
         bookInDb.year = bookData.year;
         bookInDb.language = bookData.language;
         bookInDb.rating = bookData.rating;
-        bookInDb.filename = bookData.filename;
         bookInDb.thumbnail = bookData.thumbnail;
         bookInDb.read = bookData.read;
         bookInDb.modified = new Date().toISOString();
