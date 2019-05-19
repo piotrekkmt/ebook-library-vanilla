@@ -8,7 +8,8 @@ router.get(['/', '/home'], (req, res) => {
 });
 
 router.get('/details/:isbn', (req, res) => {
-    ebookCtrl.getBookFromDb(req.params.isbn).then(book => {
+    const searchParams = {isbn: req.params.isbn};
+    ebookCtrl.getBookFromDb(searchParams).then(book => {
         book.THUMBNAIL = (book.THUMBNAIL) ? book.THUMBNAIL : '/images/covers/no-cover.png';
         res.render('details', {
             book: book

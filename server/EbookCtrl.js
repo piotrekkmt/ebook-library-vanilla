@@ -11,9 +11,9 @@ class EbookCtrl {
         return EbookModel.find().exec();
     }
 
-    async getBookFromDb(isbn) {
+    async getBookFromDb(searchParams) {
         try {
-            const bookData = await EbookModel.findOne({isbn: isbn}).exec();
+            const bookData = await EbookModel.findOne(searchParams).exec();
             if (bookData) {
                 return bookData;
             } else {
@@ -33,6 +33,40 @@ class EbookCtrl {
         } catch (err) {
             console.error(err);
             throw new ServerError('Error getting books', 500);
+        }
+    }
+
+    updateDataValues(bookInDb, bookData) {
+        bookInDb.title = bookData.title;
+        bookInDb.isbn = bookData.isbn;
+        bookInDb.title = bookData.title;
+        bookInDb.author = bookData.author;
+        bookInDb.description = bookData.description;
+        bookInDb.pages = bookData.pages;
+        bookInDb.year = bookData.year;
+        bookInDb.language = bookData.language;
+        bookInDb.rating = bookData.rating;
+        bookInDb.filename = bookData.filename;
+        bookInDb.thumbnail = bookData.thumbnail;
+        bookInDb.read = bookData.read;
+        bookInDb.modified = new Date().toISOString();
+        return bookInDb;
+    }
+
+    async editBookInDb(bookData) {
+        try {
+            const searchParams = {_id: bookData._id};
+            const bookInDb = await this.getBookFromDb(searchParams);
+            if (bookInDb) {
+                const updatedBook = this.updateDataValues(bookInDb, bookData);
+                const bookSaved = await updatedBook.save();
+                return bookSaved;
+            } else {
+                throw new ServerError('Book not found', 404);
+            }
+        } catch (err) {
+            console.error(err);
+            throw new ServerError('Error editing book', 500);
         }
     }
 
