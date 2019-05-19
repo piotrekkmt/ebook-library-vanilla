@@ -18,8 +18,8 @@ router.get('/details/:isbn', (req, res) => {
     });
 });
 
-router.get('/files', (req, res) => {
-    const files = fileCtrl.getFolderContent();
+router.get('/files', async(req, res) => {
+    const files = await fileCtrl.getFolderContent();
     res.render('filelist', {
         files: files
     });

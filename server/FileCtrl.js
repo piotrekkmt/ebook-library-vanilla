@@ -1,7 +1,5 @@
 'use strict';
 
-const ebooksFolderPath = './ebooks/';
-
 const fs = require('fs'),
     fetch = require('isomorphic-fetch'),
     formidable = require('formidable'),
@@ -15,14 +13,7 @@ class FileCtrl {
     constructor() {}
 
     getFolderContent() {
-        let folderContents = fs.readdirSync(ebooksFolderPath);
-        folderContents = folderContents.map(file => {
-            return {
-                'path': ebooksFolderPath + file,
-                'name': file
-            };
-        });
-        return folderContents;
+        return this.getDropboxContents();
     }
 
     async getDropboxContents() {
