@@ -99,6 +99,10 @@ div.rating {
     height: 185px;
 }
 
+.red {
+	color: red;
+}
+
 .error-field {
 	color: red;
 	display: none;

@@ -39,24 +39,46 @@ class FileCtrl {
         return dbx.filesDownload({path: '/thumbnails/' + thumb});
     }
 
-    async saveFileToDropbox(req) {
-        try {
+    validateDbxFile(req) {
+        return new Promise((resolve, reject) => {
             const form = new formidable.IncomingForm();
-            form.parse(req, async(err, fields, files) => {
+
+            form.parse(req, (err, fields, files) => {
+                if (err) {
+                    reject(new ServerError(err, 400));
+                }
+
                 if (files && files.ebookfiletoupload) {
                     const tempFilePath = files.ebookfiletoupload.path;
-                    let bookFile = fs.readFileSync(tempFilePath);
-                    const response = await dbx.filesUpload({path: '/ebooks/'
-                        + files.ebookfiletoupload.name, contents: bookFile});
-                    console.log('File uploaded to', response.path_display);
-                    return 'File successfully uploaded!';
+                    const stats = fs.statSync(tempFilePath);
+
+                    if (stats.size > (1024 * 1024 * 10)) {
+                        console.error('ERROR: Cannot upload files over 10MB.');
+                        reject(new ServerError('File size is over 10MB', 400));
+                    } else {
+                        const binary = fs.readFileSync(tempFilePath);
+                        const filename = files.ebookfiletoupload.name;
+                        const bookFile = {
+                            filename: filename,
+                            binary: binary
+                        };
+                        resolve(bookFile);
+                    }
                 } else {
-                    throw new ServerError('Nothing to upload. Is the file empty?', 400);
+                    reject(new ServerError('Nothing to upload. Is the file empty?', 400));
                 }
             });
+        });
+    }
+
+    async saveFileToDropbox(req) {
+        try {
+            const bookFile = await this.validateDbxFile(req);
+            await dbx.filesUpload({path: '/ebooks/' + bookFile.filename, contents: bookFile.binary});
+            return 'File successfully uploaded!';
         } catch (err) {
             console.error(err);
-            throw new ServerError('Error uploading file to dropbox', 400);
+            throw (new ServerError('Error uploading file to server', 400));
         }
     }
 }

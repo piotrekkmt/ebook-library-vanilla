@@ -15,7 +15,6 @@ class EbookCtrl {
         try {
             const bookData = await EbookModel.findOne({isbn: isbn}).exec();
             if (bookData) {
-                // THE object headings need to be in the same case.. upper or lower, make everything lower
                 return bookData;
             } else {
                 console.warn('404 - Book not found');
@@ -85,8 +84,6 @@ class EbookCtrl {
 
         return this.getBookInfoFromGoogleBooks(filesList);
     }
-
-    // TODO: Upload ebook file to server
 
     // TODO: Save ebook thumbnail to thumbnails folder on Dropbox
 
