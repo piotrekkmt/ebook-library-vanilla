@@ -1,0 +1,11 @@
+<div data-role="page" id="LoginPage">
+    {{>navbar}}
+    <div class="passwd-container">
+      <div class="passwd-form">
+        <form method="POST" action="/login">
+          <input type="hidden" id="username" name="username" value="reader" />
+          <input type="password" id="passwd" name="passwd" placeholder="Secret password" />
+        </form>
+      </div>
+    </div>
+</div>

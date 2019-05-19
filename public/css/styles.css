@@ -151,3 +151,21 @@ iframe{
 	text-decoration: none;
 	font-family: verdana, arial, helvetica, sans-serif;
 }
+
+.passwd-container {
+	padding-top: 50px;
+}
+
+.passwd-form {
+	border: 1px solid #d4d4d4;
+	border-radius: 10px;
+	padding: 30px;
+	max-width: 400px;
+	background: #eee;
+	margin: 0 auto;
+	font-size: 24px;
+}
+
+input#passwd {
+	text-align: center;
+}
