@@ -27,77 +27,10 @@ class EbookCtrl {
         }
     }
 
-    makeDropboxFilesIntoMongooseModels(dropboxContents) {
-        let modelledEbooks = [];
-        dropboxContents.forEach(dbxFile => {
-            const bookData = {
-                'filename': dbxFile.name
-            };
-
-            const regexTitleWithLangAndIsbn = /^.._[a-zA-Z0-9]{1,13}_/;
-
-            if (dbxFile.name && dbxFile.name.match(regexTitleWithLangAndIsbn)) {
-                bookData['language'] = dbxFile.name.substr(0, 2).toLowerCase();
-                bookData['isbn'] = dbxFile.name.split('_')[1];
-                bookData['title'] = dbxFile.name.split('_')[2];
-                bookData['author'] = '**file**';
-            } else {
-                bookData['title'] = dbxFile.name;
-                bookData['author'] = '**file**';
-            }
-            const fileEntry = new EbookModel(bookData);
-            modelledEbooks.push(fileEntry);
-        });
-
-        return modelledEbooks;
-    }
-
-    getUnique(arr, comp) {
-        const unique = arr.map(e => e[comp])
-            // store the keys of the unique objects
-            .map((e, i, final) => final.indexOf(e) === i && i)
-            // eliminate the dead keys & store unique objects
-            .filter(e => arr[e]).map(e => arr[e]);
-        return unique;
-    }
-
-    removeFilesAlreadyInDb(data) {
-        const filenames = data.map(book => {
-            return book.filename;
-        });
-
-        let duplicatedFilenames = [];
-        filenames.forEach(str => {
-            if (filenames.indexOf(str) !== filenames.lastIndexOf(str)) {
-                duplicatedFilenames.push(str);
-            }
-        });
-
-        const dups = [... new Set(duplicatedFilenames)];
-
-        return data.filter(ebook => {
-            if (dups.includes(ebook.filename) && ebook.author === '**file**') {
-                return false;
-            } else {
-                return true;
-            }
-        });
-    }
-
-    mergeDropboxWithDatabase(dbx, db) {
-        dbx = dbx || [];
-        db = db || [];
-        let merged = dbx.concat(db);
-        return this.removeFilesAlreadyInDb(merged);
-    }
-
     async getAllBooks() {
         try {
-            let [dropboxBooks, databaseBooks] = await Promise.all([fileCtrl.getDropboxContents(),
-                this.getBooksFromDb()]);
-            const dbxModelled = this.makeDropboxFilesIntoMongooseModels(dropboxBooks);
-            let fullBookList = this.mergeDropboxWithDatabase(dbxModelled, databaseBooks);
-            return fullBookList;
+            let databaseBooks = await this.getBooksFromDb();
+            return databaseBooks;
         } catch (err) {
             console.error(err);
             throw new ServerError('Error getting books', 500);
