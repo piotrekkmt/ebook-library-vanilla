@@ -25,6 +25,19 @@ router.get('/getbookdatabyisbn/:isbn', (req, res) => {
     }
 });
 
+router.put('/editebook', async(req, res) => {
+    if (req.body) {
+        try {
+            const message = await ebookCtrl.editBookInDb(req.body);
+            res.status(200).json({status: 'OK', message: message});
+        } catch (err) {
+            res.status(err.httpCode).json(err);
+        }
+    } else {
+        res.status(400).json('Missing parameters');
+    }
+});
+
 router.post('/saveebook', async(req, res) => {
     if (req.body) {
         try {
