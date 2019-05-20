@@ -15,6 +15,11 @@ Then you will also need to set up a Dropbox Application using the Dropbox Develo
 
 Create the `.env` file from the sample file provided.
 
+```PowerShell
+DROPBOX_ACCESS_TOKEN=YOUR-TOKEN-HERE
+MONGO_URI=mongo+srv//YOUR//MONGOURI/
+```
+
 To start:
 ```
 $ npm start
