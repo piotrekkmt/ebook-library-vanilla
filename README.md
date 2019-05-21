@@ -1,3 +1,5 @@
+![tree-drawing](/public/images/drawing-tree.jpg)
+
 # eBook Library Vanilla
 
  Nth generation of the eBook Library, this time with a nice jQuery Mobile UI and vanilla JavaScript that a Kindle browser likes.
