@@ -86,8 +86,9 @@ var UploadPage = (function() {
                 $('div.thumbnail-placeholder').html('Invalid filename. Insert ISBN manually.');
             }
         },
-        getFileSize() {
-            var sizeInKb = parseInt(this.getFileSizeFromFile() / 1024);
+        getFileSize: function() {
+            var fileSize = UploadPage.getFileSizeFromFile() || 0;
+            var sizeInKb = parseInt(fileSize / 1024);
             if (sizeInKb > 1024 * 10) {
                 $('#fileSize').html('The filesize is over 10MB! (' + sizeInKb + ' kB)');
                 $('#fileSize').addClass('red');
@@ -97,7 +98,7 @@ var UploadPage = (function() {
                 fileTooBig = false;
             }
         },
-        getFileSizeFromFile() {
+        getFileSizeFromFile: function() {
             var input, file;
 
             if (!window.FileReader) {
