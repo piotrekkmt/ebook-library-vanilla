@@ -4,7 +4,7 @@
         <h3 class="ui-bar ui-bar-a ui-corner-all">{{book.title}} by {{book.author}}</h3>
         <div class="thumbnail-detail">
             <img src="{{book.thumbnail}}" class="book-thumb-detail" />
-            <a href="/api/file/{{book.filename}}" target="_blank" class="ui-btn ui-shadow">Download</a>
+            <a href="/api/file/{{book.filename}}" target="_self" class="ui-btn ui-shadow">Download</a>
         </div>
         <div class="ui-body ui-body-a ui-corner-all book-description">
             <p>{{book.description}}</p>
