@@ -10,7 +10,7 @@
     "body-parser": "^1.19.0",
     "dotenv": "^8.0.0",
     "dropbox": "^4.0.17",
-    "express": "^4.16.4",
+    "express": "^4.17.3",
     "express-hbs": "^2.1.2",
     "formidable": "^1.2.1",
     "isomorphic-fetch": "^2.2.1",
