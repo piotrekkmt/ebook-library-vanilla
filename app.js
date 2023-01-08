@@ -7,11 +7,16 @@ const express = require('express'),
     hbs = require('express-hbs'),
     mongoose = require('mongoose'),
     mongoUri = process.env.MONGO_URI,
+    morgan = require('morgan'),
     port = process.env.PORT || 3000;
+
+mongoose.set('strictQuery', false);
 
 mongoose.connect(mongoUri, {useNewUrlParser: true})
     .then(() => console.log('connection successful'))
     .catch((err) => console.error(err));
+
+app.use(morgan('tiny'));
 
 app.engine('hbs', hbs.express4({
     partialsDir: __dirname + '/views/partials',
@@ -20,6 +25,7 @@ app.engine('hbs', hbs.express4({
 app.set('view engine', 'hbs');
 app.set('views', __dirname + '/views');
 app.use(bodyParser.json());
+
 
 app.use('/api', require('./server/routes/api.js'));
 app.use('/', require('./server/routes/ui.js'));

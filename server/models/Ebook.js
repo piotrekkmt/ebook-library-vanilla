@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-// Make this lower case, upper sucks balls in JSON, we're not savages...
-var ebookSchema = new Schema({
+const ebookSchema = new Schema({
     isbn: String,
     title: String,
     author: String,
