@@ -74,7 +74,6 @@ var HomePage = (function() {
             $('#refreshHomePage').bind('click', function() {
                 $('#showHere').html('<strong>WIELKA DUPA</strong>');
             });
-
         },
         init: function() {
             HomePage.getAllBooks(function(booksReceived) {

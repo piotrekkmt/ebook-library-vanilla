@@ -5,15 +5,14 @@ const request = require('request-promise'),
     ServerError = require('./errors/ServerError');
 
 class EbookCtrl {
-    constructor() {}
 
     getBooksFromDb() {
-        return EbookModel.find().exec();
+        return EbookModel.find().lean().exec();
     }
 
     async getBookFromDb(searchParams) {
         try {
-            const bookData = await EbookModel.findOne(searchParams).exec();
+            const bookData = await EbookModel.findOne(searchParams).lean().exec();
             if (bookData) {
                 return bookData;
             } else {
@@ -69,7 +68,7 @@ class EbookCtrl {
         }
     }
 
-    async saveEbooktoDb(bookData) {
+    async saveEbookToDb(bookData) {
         try {
             bookData.rating = (bookData.rating === 'No rating') ? 0 : bookData.rating,
             bookData.pages = bookData.pages || 0;
