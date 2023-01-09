@@ -54,14 +54,9 @@ class EbookCtrl {
     async editBookInDb(bookData) {
         try {
             const searchParams = {_id: bookData._id};
-            const bookInDb = await this.getBookFromDb(searchParams);
-            if (bookInDb) {
-                const updatedBook = this.updateDataValues(bookInDb, bookData);
-                const bookSaved = await updatedBook.save();
-                return bookSaved;
-            } else {
-                throw new ServerError('Book not found', 404);
-            }
+            const bookDoc = await EbookModel.findOneAndUpdate(searchParams, bookData).exec();
+            console.log('Book updated', bookDoc);
+            return bookDoc;
         } catch (err) {
             console.error(err);
             throw new ServerError('Error editing book', 500);

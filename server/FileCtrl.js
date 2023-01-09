@@ -10,8 +10,6 @@ const fs = require('fs'),
 
 
 class FileCtrl {
-    constructor() {}
-
     getFolderContent() {
         return this.getDropboxContents();
     }
@@ -39,7 +37,7 @@ class FileCtrl {
         return dbx.filesDownload({path: '/thumbnails/' + thumb});
     }
 
-    validateDbxFile(req) {
+    parseFormData(req) {
         return new Promise((resolve, reject) => {
             const form = new formidable.IncomingForm();
 
@@ -47,28 +45,37 @@ class FileCtrl {
                 if (err) {
                     reject(new ServerError(err, 400));
                 }
-
                 if (files && files.ebookfiletoupload) {
-                    const tempFilePath = files.ebookfiletoupload.path;
-                    const stats = fs.statSync(tempFilePath);
-
-                    if (stats.size > (1024 * 1024 * 10)) {
-                        console.error('ERROR: Cannot upload files over 10MB.');
-                        reject(new ServerError('File size is over 10MB', 400));
-                    } else {
-                        const binary = fs.readFileSync(tempFilePath);
-                        const filename = files.ebookfiletoupload.name;
-                        const bookFile = {
-                            filename: filename,
-                            binary: binary
-                        };
-                        resolve(bookFile);
-                    }
+                    resolve(files);
                 } else {
                     reject(new ServerError('Nothing to upload. Is the file empty?', 400));
                 }
             });
         });
+    }
+
+    async validateDbxFile(req) {
+        const files = await this.parseFormData(req);
+
+        try {
+            const {filepath, originalFilename} = files.ebookfiletoupload;
+            const stats = fs.statSync(filepath);
+
+            if (stats.size > (1024 * 1024 * 10)) {
+                console.error('ERROR: Cannot upload files over 10MB.');
+                throw new ServerError('File size is over 10MB', 400);
+            } else {
+                const binary = fs.readFileSync(filepath);
+                const bookFile = {
+                    filename: originalFilename,
+                    binary
+                };
+                return bookFile;
+            }
+        } catch (err) {
+            console.error(err);
+            throw new ServerError('Error reading file', 400);
+        }
     }
 
     async saveFileToDropbox(req) {
