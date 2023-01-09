@@ -4,7 +4,7 @@
   "description": "Ebook Library Nodejs version with vanilla front end",
   "main": "app.js",
   "engines": {
-    "node": "16.17.0"
+    "node": "16.x"
   },
   "dependencies": {
     "body-parser": "^1.20.1",
