@@ -27,7 +27,7 @@ To start:
 $ npm start
 ```
 
-Happy reading! 
+Happy ebooking reading!
 
 ### Development
 
