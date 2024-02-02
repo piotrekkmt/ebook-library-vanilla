@@ -62,3 +62,7 @@ ebooks/*
 ebooks.db
 
 .vscode
+
+.DS_Store
+*/*.DS_Store
+
